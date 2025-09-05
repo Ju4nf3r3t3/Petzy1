@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block content %}
+<h2>Usuarios</h2>
+<a href="/users/login/" class="btn btn-primary mb-3">Iniciar sesión</a>
+<a href="/users/register/" class="btn btn-success mb-3">Registrarse</a>
+<table class="table">
+  <thead><tr><th>Username</th><th>Email</th><th>Is staff</th></tr></thead>
+  <tbody>
+    {% for u in usuarios %}
+      <tr>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.is_staff }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="3">No hay usuarios registrados</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

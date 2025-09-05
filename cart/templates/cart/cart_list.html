@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Carritos</h2>
+<ul>
+    {% for cart in carts %}
+        <li>Carrito de {{ cart.usuario.username }}</li>
+    {% empty %}
+        <li>No hay carritos activos.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

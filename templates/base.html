@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Petzy{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'home:index' %}">🐾 Petzy</a></h1>
+        <nav>
+            <a href="{% url 'home:index' %}">Inicio</a> |
+            <a href="{% url 'products:list' %}">Productos</a> |
+            <a href="{% url 'cart:list' %}">Carrito</a> |
+            <a href="{% url 'orders:list' %}">Pedidos</a> |
+            {% if user.is_authenticated %}
+                Hola {{ user.username }} |
+                <a href="{% url 'users:logout' %}">Cerrar sesión</a>
+            {% else %}
+                <a href="{% url 'users:login' %}">Login</a> |
+                <a href="{% url 'users:register' %}">Registro</a>
+            {% endif %}
+        </nav>
+    </header>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>
