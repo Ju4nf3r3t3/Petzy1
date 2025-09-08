@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Checkout - Petzy{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Finalizar Compra</h1>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Resumen del Pedido -->
+        <div class="w-full lg:w-1/2">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Resumen de tu pedido</h2>
+                
+                <div class="space-y-3">
+                    {% for item in items %}
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <div class="flex items-center">
+                            {% if item.producto.imagen %}
+                            <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" 
+                                 class="w-12 h-12 object-cover rounded mr-3">
+                            {% endif %}
+                            <div>
+                                <h4 class="font-medium">{{ item.producto.nombre }}</h4>
+                                <p class="text-sm text-gray-600">Cantidad: {{ item.cantidad }}</p>
+                            </div>
+                        </div>
+                        <span class="font-medium">${{ item.producto.precio|floatformat:2 }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-6 space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Subtotal:</span>
+                        <span class="font-medium">${{ total|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Envío:</span>
+                        <span class="font-medium">$5.00</span>
+                    </div>
+                    <div class="flex justify-between border-t pt-2 mt-2">
+                        <span class="text-lg font-semibold">Total:</span>
+                        <span class="text-lg font-semibold text-green-600">${{ total|add:5|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Pago -->
+        <div class="w-full lg:w-1/2">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Información de pago</h2>
+
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    
+                    <!-- Información de contacto -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+                        <input type="email" name="email" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="tu@email.com">
+                    </div>
+
+                    <!-- Información de envío -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+                        <input type="text" name="nombre" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Nombre y apellido">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                            <input type="tel" name="telefono" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="+1 234 567 8900">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+                            <input type="text" name="ciudad" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="Tu ciudad">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                        <textarea name="direccion" rows="3" required
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  placeholder="Dirección completa de envío"></textarea>
+                    </div>
+
+                    <!-- Método de pago -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Método de pago</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="metodo_pago" value="tarjeta" checked class="mr-2">
+                                <span>Tarjeta de crédito/débito</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="metodo_pago" value="paypal" class="mr-2">
+                                <span>PayPal</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Información de tarjeta (mostrar solo si selecciona tarjeta) -->
+                    <div id="tarjeta-info" class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Número de tarjeta</label>
+                            <input type="text" name="numero_tarjeta"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="1234 5678 9012 3456">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de expiración</label>
+                                <input type="text" name="expiracion"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                       placeholder="MM/AA">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                                <input type="text" name="cvv"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                       placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md transition duration-200">
+                        Realizar pedido - ${{ total|add:5|floatformat:2 }}
+                    </button>
+                </form>
+
+                <div class="mt-4 text-center">
+                    <a href="{% url 'cart:detail' %}" class="text-blue-600 hover:text-blue-800 text-sm">
+                        ← Volver al carrito
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mostrar/ocultar información de tarjeta según método de pago
+    const metodoPagoRadios = document.querySelectorAll('input[name="metodo_pago"]');
+    const tarjetaInfo = document.getElementById('tarjeta-info');
+    
+    function toggleTarjetaInfo() {
+        const metodoSeleccionado = document.querySelector('input[name="metodo_pago"]:checked').value;
+        tarjetaInfo.style.display = metodoSeleccionado === 'tarjeta' ? 'block' : 'none';
+        
+        // Hacer campos requeridos solo si se selecciona tarjeta
+        const camposTarjeta = tarjetaInfo.querySelectorAll('input');
+        camposTarjeta.forEach(campo => {
+            campo.required = metodoSeleccionado === 'tarjeta';
+        });
+    }
+    
+    // Inicializar
+    toggleTarjetaInfo();
+    
+    // Escuchar cambios
+    metodoPagoRadios.forEach(radio => {
+        radio.addEventListener('change', toggleTarjetaInfo);
+    });
+    
+    // Validación básica del formulario
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        // Puedes agregar validaciones adicionales aquí
+        console.log('Procesando pago...');
+    });
+});
+</script>
+{% endblock %}

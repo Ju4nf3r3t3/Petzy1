@@ -1,8 +1,11 @@
 from django.urls import path
-from .views import OrderListView
+from .views import order_list, checkout, confirm, generar_factura
 
 app_name = "orders"
 
 urlpatterns = [
-    path("", OrderListView.as_view(), name="list"),
+    path("", order_list, name="list"),
+    path("checkout/", checkout, name="checkout"),
+    path("confirm/<int:order_id>/", confirm, name="confirm"),
+    path("<int:pk>/factura/", generar_factura, name="factura"),
 ]

@@ -2,28 +2,101 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Petzy{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Incluye Tailwind CSS desde CDN (para desarrollo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- O instala Tailwind CSS localmente para producción -->
 </head>
-<body>
-    <header>
-        <h1><a href="{% url 'home:index' %}">🐾 Petzy</a></h1>
-        <nav>
-            <a href="{% url 'home:index' %}">Inicio</a> |
-            <a href="{% url 'products:list' %}">Productos</a> |
-            <a href="{% url 'cart:list' %}">Carrito</a> |
-            <a href="{% url 'orders:list' %}">Pedidos</a> |
-            {% if user.is_authenticated %}
-                Hola {{ user.username }} |
-                <a href="{% url 'users:logout' %}">Cerrar sesión</a>
-            {% else %}
-                <a href="{% url 'users:login' %}">Login</a> |
-                <a href="{% url 'users:register' %}">Registro</a>
-            {% endif %}
-        </nav>
+<body class="bg-gray-50">
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-blue-600">
+                    <a href="{% url 'home:index' %}" class="flex items-center">
+                        <span class="mr-2">🐾</span> Petzy
+                    </a>
+                </h1>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="{% url 'home:index' %}" class="text-gray-700 hover:text-blue-600">Inicio</a>
+                    <a href="{% url 'products:list' %}" class="text-gray-700 hover:text-blue-600">Productos</a>
+                    <a href="{% url 'cart:detail' %}" class="text-gray-700 hover:text-blue-600">Carrito</a>
+                    <a href="{% url 'orders:list' %}" class="text-gray-700 hover:text-blue-600">Pedidos</a>
+                    {% if user.is_authenticated %}
+                        <span class="text-gray-700">Hola {{ user.username }}</span>
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-gray-700 hover:text-blue-600">Cerrar sesión</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="text-gray-700 hover:text-blue-600">Login</a>
+                        <a href="{% url 'users:register' %}" class="text-gray-700 hover:text-blue-600">Registro</a>
+                    {% endif %}
+                </nav>
+                <!-- Menú móvil -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- Menú móvil desplegable -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 pb-4">
+                <a href="{% url 'home:index' %}" class="block py-2 text-gray-700 hover:text-blue-600">Inicio</a>
+                <a href="{% url 'products:list' %}" class="block py-2 text-gray-700 hover:text-blue-600">Productos</a>
+                <a href="{% url 'cart:detail' %}" class="block py-2 text-gray-700 hover:text-blue-600">Carrito</a>
+                <a href="{% url 'orders:list' %}" class="block py-2 text-gray-700 hover:text-blue-600">Pedidos</a>
+                {% if user.is_authenticated %}
+                    <span class="block py-2 text-gray-700">Hola {{ user.username }}</span>
+                    <form action="{% url 'logout' %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="block py-2 text-gray-700 hover:text-blue-600">Cerrar sesión</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'users:login' %}" class="block py-2 text-gray-700 hover:text-blue-600">Login</a>
+                    <a href="{% url 'users:register' %}" class="block py-2 text-gray-700 hover:text-blue-600">Registro</a>
+                {% endif %}
+            </div>
+        </div>
     </header>
-    <hr>
-    {% block content %}{% endblock %}
+
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-xl font-bold mb-4">Petzy</h2>
+                    <p>Tu marketplace de confianza para mascotas</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Enlaces rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'home:index' %}" class="hover:text-blue-300">Inicio</a></li>
+                        <li><a href="{% url 'products:list' %}" class="hover:text-blue-300">Productos</a></li>
+                        <li><a href="#" class="hover:text-blue-300">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p>&copy; 2023 Petzy. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script para el menú móvil -->
+    <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

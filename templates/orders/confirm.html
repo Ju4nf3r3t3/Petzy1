@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Confirmación de Pedido - Petzy{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+        <div class="text-green-500 text-6xl mb-4">✅</div>
+        
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">¡Pedido Confirmado!</h1>
+        
+        <p class="text-gray-600 mb-2">Tu pedido <strong>#{{ order.id }}</strong> ha sido procesado exitosamente.</p>
+        <p class="text-gray-600 mb-6">Hemos enviado un correo de confirmación a tu dirección de email.</p>
+
+        <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+            <h3 class="font-semibold text-gray-800 mb-2">Resumen del pedido:</h3>
+            <p><strong>Total:</strong> ${{ order.total|floatformat:2 }}</p>
+            <p><strong>Estado:</strong> <span class="text-green-600">{{ order.get_estado_display }}</span></p>
+            <p><strong>Fecha:</strong> {{ order.fecha|date:"d M Y H:i" }}</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'orders:factura' order.id %}" 
+               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition duration-200">
+                📄 Descargar Factura
+            </a>
+            <a href="{% url 'products:list' %}" 
+               class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-md transition duration-200">
+                Seguir Comprando
+            </a>
+            <a href="{% url 'orders:list' %}" 
+               class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md transition duration-200">
+                Ver Mis Pedidos
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

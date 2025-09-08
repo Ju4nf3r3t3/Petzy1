@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Carrito de Compras - Petzy{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-7xl">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Carrito de Compras</h1>
+
+    {% if cart_items %}
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Productos en carrito -->
+        <div class="w-full lg:w-8/12">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b">
+                    <h2 class="text-xl font-semibold text-gray-800">Productos en tu carrito</h2>
+                </div>
+                <div class="p-6">
+                    {% for item in cart_items %}
+                    <div class="flex flex-col sm:flex-row items-center py-5 border-b border-gray-100 last:border-b-0">
+                        <!-- Imagen del producto -->
+                        <div class="w-20 h-20 flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
+                            {% if item.producto.imagen %}
+                            <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}"
+                                 class="w-full h-full object-cover rounded-lg">
+                            {% else %}
+                            <div class="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span class="text-gray-400 text-sm">Sin imagen</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Información del producto -->
+                        <div class="flex-grow text-center sm:text-left mb-4 sm:mb-0">
+                            <h3 class="text-lg font-medium text-gray-900">{{ item.producto.nombre }}</h3>
+                            <p class="text-sm text-gray-500">{{ item.producto.categoria }}</p>
+                        </div>
+
+                        <!-- Precio -->
+                        <div class="w-full sm:w-auto flex items-center justify-between sm:block mb-4 sm:mb-0 sm:mx-4">
+                            <span class="text-sm text-gray-500 sm:hidden">Precio:</span>
+                            <span class="text-green-600 font-bold">${{ item.producto.precio }}</span>
+                        </div>
+
+                        <!-- Cantidad -->
+                        <div class="w-full sm:w-auto flex items-center justify-between sm:block mb-4 sm:mb-0 sm:mx-4">
+                            <span class="text-sm text-gray-500 sm:hidden">Cantidad:</span>
+                            <form method="post" action="{% url 'cart:update' item.producto.id %}" class="flex items-center">
+                                {% csrf_token %}
+                                <input type="number" name="cantidad" value="{{ item.cantidad }}"
+                                       min="1" max="{{ item.producto.stock }}"
+                                       class="w-16 py-1 px-2 border border-gray-300 rounded text-center">
+                                <button type="submit" class="ml-2 p-1 text-blue-500 hover:text-blue-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Subtotal -->
+                        <div class="w-full sm:w-auto flex items-center justify-between sm:block mb-4 sm:mb-0 sm:mx-4">
+                            <span class="text-sm text-gray-500 sm:hidden">Subtotal:</span>
+                            <span class="font-bold">${{ item.subtotal }}</span>
+                        </div>
+
+                        <!-- Eliminar -->
+                        <div class="w-full sm:w-auto flex justify-end sm:block">
+                            <form method="post" action="{% url 'cart:remove' item.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="p-2 text-red-500 hover:text-red-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen del pedido -->
+        <div class="w-full lg:w-4/12">
+            <div class="bg-white rounded-lg shadow-md sticky top-6">
+                <div class="bg-gray-50 px-6 py-4 border-b">
+                    <h2 class="text-xl font-semibold text-gray-800">Resumen del Pedido</h2>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">Subtotal:</span>
+                        <span class="font-medium">${{ cart_total }}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">Envío:</span>
+                        <span class="font-medium">${{ shipping_cost }}</span>
+                    </div>
+                    <hr class="my-4">
+                    <div class="flex justify-between mb-6">
+                        <strong class="text-lg">Total:</strong>
+                        <strong class="text-lg">${{ total_with_shipping }}</strong>
+                    </div>
+
+                    {% if cart_items %}
+                    <a href="{% url 'orders:checkout' %}" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center font-medium py-3 px-4 rounded-lg mb-3 transition duration-200">
+                        Proceder al Pago
+                    </a>
+                    {% endif %}
+
+                    <a href="{% url 'products:list' %}" class="block w-full border border-blue-500 text-blue-500 hover:bg-blue-50 text-center font-medium py-3 px-4 rounded-lg transition duration-200">
+                        Seguir Comprando
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md mt-6 p-6">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 h-6 w-6 text-yellow-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-gray-800">¿Sabías que?</h3>
+                        <p class="mt-1 text-sm text-gray-600">
+                            Los productos se reservan automáticamente por 30 minutos.
+                            ¡Completa tu compra antes de que se agoten!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Carrito vacío -->
+    <div class="text-center py-12">
+        <div class="mx-auto h-24 w-24 text-gray-300 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+        </div>
+        <h3 class="text-2xl font-medium text-gray-600 mb-3">Tu carrito está vacío</h3>
+        <p class="text-gray-500 mb-6">Agrega algunos productos maravillosos para tu mascota</p>
+        <a href="{% url 'products:list' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+            Descubrir Productos
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Actualizar cantidad automáticamente al cambiar
+    const quantityInputs = document.querySelectorAll('input[name="cantidad"]');
+    quantityInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            this.form.submit();
+        });
+    });
+    
+    // Confirmar eliminación de items
+    const removeButtons = document.querySelectorAll('form[action*="remove"]');
+    removeButtons.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este producto del carrito?')) {
+                e.preventDefault();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
