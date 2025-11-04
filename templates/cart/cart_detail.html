@@ -39,7 +39,7 @@
                         <!-- Precio -->
                         <div class="w-full sm:w-auto flex items-center justify-between sm:block mb-4 sm:mb-0 sm:mx-4">
                             <span class="text-sm text-gray-500 sm:hidden">Precio:</span>
-                            <span class="text-green-600 font-bold">${{ item.producto.precio }}</span>
+                            <span class="text-green-600 font-bold">{{ item.producto.precio|currency_cop }}</span>
                         </div>
 
                         <!-- Cantidad -->
@@ -61,7 +61,7 @@
                         <!-- Subtotal -->
                         <div class="w-full sm:w-auto flex items-center justify-between sm:block mb-4 sm:mb-0 sm:mx-4">
                             <span class="text-sm text-gray-500 sm:hidden">Subtotal:</span>
-                            <span class="font-bold">${{ item.subtotal }}</span>
+                            <span class="font-bold">{{ item.subtotal|currency_cop }}</span>
                         </div>
 
                         <!-- Eliminar -->
@@ -90,16 +90,16 @@
                 <div class="p-6">
                     <div class="flex justify-between mb-2">
                         <span class="text-gray-600">Subtotal:</span>
-                        <span class="font-medium">${{ cart_total }}</span>
+                        <span class="font-medium">{{ cart_total|currency_cop }}</span>
                     </div>
                     <div class="flex justify-between mb-2">
                         <span class="text-gray-600">Envío:</span>
-                        <span class="font-medium">${{ shipping_cost }}</span>
+                        <span class="font-medium">{{ shipping_cost|currency_cop }}</span>
                     </div>
                     <hr class="my-4">
                     <div class="flex justify-between mb-6">
                         <strong class="text-lg">Total:</strong>
-                        <strong class="text-lg">${{ total_with_shipping }}</strong>
+                        <strong class="text-lg">{{ total_with_shipping|currency_cop }}</strong>
                     </div>
 
                     {% if cart_items %}

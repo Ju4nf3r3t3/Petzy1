@@ -26,7 +26,7 @@
                                 <p class="text-sm text-gray-600">Cantidad: {{ item.cantidad }}</p>
                             </div>
                         </div>
-                        <span class="font-medium">${{ item.producto.precio|floatformat:2 }}</span>
+                        <span class="font-medium">{{ item.producto.precio|currency_cop }}</span>
                     </div>
                     {% endfor %}
                 </div>
@@ -34,15 +34,15 @@
                 <div class="mt-6 space-y-2">
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% trans "Subtotal" %}:</span>
-                        <span class="font-medium">${{ subtotal|floatformat:2 }}</span>
+                        <span class="font-medium">{{ subtotal|currency_cop }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% trans "Envío" %}:</span>
-                        <span class="font-medium">${{ shipping_cost|floatformat:2 }}</span>
+                        <span class="font-medium">{{ shipping_cost|currency_cop }}</span>
                     </div>
                     <div class="flex justify-between border-t pt-2 mt-2">
                         <span class="text-lg font-semibold">{% trans "Total" %}:</span>
-                        <span class="text-lg font-semibold text-green-600">${{ total_with_shipping|floatformat:2 }}</span>
+                        <span class="text-lg font-semibold text-green-600">{{ total_with_shipping|currency_cop }}</span>
                     </div>
                 </div>
             </div>
@@ -169,7 +169,7 @@
 
                     <button type="submit"
                             class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md transition duration-200">
-                        {% trans "Realizar pedido" %} - ${{ total_with_shipping|floatformat:2 }}
+                        {% trans "Realizar pedido" %} - {{ total_with_shipping|currency_cop }}
                     </button>
                 </form>
 

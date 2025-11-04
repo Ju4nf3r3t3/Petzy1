@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import ensure_csrf_cookie
 from decimal import Decimal
 from cart.models import Cart
+from home.utils import format_cop
 from .forms import CheckoutForm
 from .models import Order, OrderItem
 
@@ -118,10 +119,11 @@ def generar_factura(request, pk):
 
     y = 750
     for item in order.items.all():
-        p.drawString(100, y, f"{item.producto.nombre} - Cant: {item.cantidad} - Precio: {item.precio_unitario}")
+        precio = format_cop(item.precio_unitario)
+        p.drawString(100, y, f"{item.producto.nombre} - Cant: {item.cantidad} - Precio: {precio}")
         y -= 20
 
-    p.drawString(100, y-20, f"Total: {order.total}")
+    p.drawString(100, y - 20, f"Total: {format_cop(order.total)}")
     p.showPage()
     p.save()
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from decimal import Decimal
 from typing import Iterable, List, Sequence
 
 from django.utils.translation import gettext_lazy as _
@@ -25,7 +26,7 @@ class FeaturedProduct:
 
     name: str
     description: str
-    price: str
+    price: Decimal
     url: str
     image_url: str | None = None
 
@@ -55,7 +56,7 @@ class DatabaseFeaturedProductsProvider(FeaturedProductsProvider):
                 FeaturedProduct(
                     name=producto.nombre,
                     description=producto.descripcion,
-                    price=str(producto.precio),
+                    price=producto.precio,
                     url=producto.get_absolute_url(),
                     image_url=producto.imagen.url if producto.imagen else None,
                 )
@@ -72,14 +73,14 @@ class StaticFeaturedProductsProvider(FeaturedProductsProvider):
                 FeaturedProduct(
                     name=_("Paquete de bienvenida para tu mascota"),
                     description=_("Incluye cama acolchada, plato doble y juguete interactivo."),
-                    price="89.900",
+                    price=Decimal("89900"),
                     url="#",
                     image_url=None,
                 ),
                 FeaturedProduct(
                     name=_("Kit de aseo esencial"),
                     description=_("Shampoo hipoalergénico, guante cepillador y toallas absorbentes."),
-                    price="45.500",
+                    price=Decimal("45500"),
                     url="#",
                     image_url=None,
                 ),

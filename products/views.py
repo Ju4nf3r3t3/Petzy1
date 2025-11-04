@@ -4,6 +4,8 @@ from django.db.models import Avg, Count, Q, Sum
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+
+from home.utils import format_cop
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView, ListView
 
@@ -196,6 +198,7 @@ def productos_disponibles_api(request):
             "name": producto.nombre,
             "category": producto.categoria,
             "price": float(producto.precio),
+            "price_cop": format_cop(producto.precio),
             "stock": producto.stock,
             "detail_url": request.build_absolute_uri(producto.get_absolute_url()),
             "image": request.build_absolute_uri(producto.imagen.url) if producto.imagen else None,

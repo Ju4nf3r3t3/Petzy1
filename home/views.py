@@ -4,6 +4,8 @@ import json
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
+from decimal import Decimal, InvalidOperation
+
 from django.conf import settings
 from django.shortcuts import render
 from django.utils.translation import gettext as _
@@ -36,10 +38,17 @@ def _normalise_ally_products(data: dict | list | None, limit: int = 5):
     normalised = []
     for item in items[:limit]:
         if isinstance(item, dict):
+            price_value = item.get("price")
+            if price_value is not None:
+                try:
+                    price_value = Decimal(str(price_value))
+                except (InvalidOperation, TypeError, ValueError):
+                    pass
+
             normalised.append(
                 {
                     "name": item.get("name") or item.get("title"),
-                    "price": item.get("price"),
+                    "price": price_value,
                     "description": item.get("description"),
                     "url": item.get("detail_url") or item.get("url"),
                 }
