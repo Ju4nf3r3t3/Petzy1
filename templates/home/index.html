@@ -56,7 +56,7 @@
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ featured.name }}</h3>
                     <p class="text-gray-600 text-sm mb-4">{{ featured.description }}</p>
                     <div class="flex items-center justify-between">
-                        <span class="text-blue-600 font-semibold text-lg">{{ featured.price|currency_cop }}</span>
+                        <span class="text-blue-600 font-semibold text-lg">${{ featured.price }}</span>
                         {% if featured.url and featured.url != '#' %}
                         <a href="{{ featured.url }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">{% trans "Ver producto" %}</a>
                         {% endif %}
@@ -84,7 +84,7 @@
                 <p class="text-gray-600 text-sm mb-3">{{ ally.description|default:_("Próximamente más información.") }}</p>
                 <div class="flex items-center justify-between">
                     {% if ally.price %}
-                        <span class="text-blue-600 font-semibold">{{ ally.price|currency_cop }}</span>
+                        <span class="text-blue-600 font-semibold">${{ ally.price }}</span>
                     {% endif %}
                     {% if ally.url %}
                         <a href="{{ ally.url }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium" target="_blank" rel="noopener">{% trans "Visitar" %}</a>

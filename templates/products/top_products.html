@@ -51,7 +51,7 @@
                 <p class="text-gray-600 text-sm mb-3">{{ p.descripcion|truncatewords:15 }}</p>
 
                 <div class="mb-3">
-                    <span class="text-green-600 font-bold">{{ p.precio|currency_cop }}</span>
+                    <span class="text-green-600 font-bold">${{ p.precio }}</span>
                 </div>
 
                 <!-- Información específica según el tipo de ranking -->

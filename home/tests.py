@@ -12,7 +12,6 @@ from home.services import (
     StaticFeaturedProductsProvider,
     get_featured_provider,
 )
-from home.utils import format_cop
 from home.utils.i18n import ensure_compiled_catalogs
 from products.models import Producto
 
@@ -26,7 +25,7 @@ class FeaturedProductsProviderTests(TestCase):
     def test_static_provider_returns_configured_items(self):
         items = [
             FeaturedProduct(
-                name="Kit", description="Desc", price=Decimal("10"), url="#"
+                name="Kit", description="Desc", price="10", url="#"
             )
         ]
         provider = StaticFeaturedProductsProvider(items)
@@ -81,14 +80,3 @@ class TranslationCompilationTests(SimpleTestCase):
             compiled = po_dir / "django.mo"
             self.assertTrue(compiled.exists())
             self.assertGreater(compiled.stat().st_size, 0)
-
-
-class CurrencyFormatTests(SimpleTestCase):
-    def test_formats_integer_amounts(self):
-        self.assertEqual(format_cop(3000), "$ 3.000")
-
-    def test_formats_decimal_amounts(self):
-        self.assertEqual(format_cop("1234.5"), "$ 1.234,50")
-
-    def test_omits_symbol_when_requested(self):
-        self.assertEqual(format_cop(Decimal("2500"), with_symbol=False), "2.500")
