@@ -3,9 +3,11 @@ from reportlab.pdfgen import canvas
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
+from django.views.decorators.csrf import ensure_csrf_cookie
 from decimal import Decimal
-from cart.models import Cart, CartItem
-from products.models import Producto
+from cart.models import Cart
+from .forms import CheckoutForm
 from .models import Order, OrderItem
 
 @login_required
@@ -15,59 +17,87 @@ def order_list(request):
 
 
 @login_required
+@ensure_csrf_cookie
 def checkout(request):
-    cart, created = Cart.objects.get_or_create(usuario=request.user)
-    items = cart.items.select_related("producto")
+    cart, _ = Cart.objects.get_or_create(usuario=request.user)
+    items_queryset = cart.items.select_related("producto")
 
-    # Verificar si el carrito está vacío
-    if not items.exists():
-        messages.warning(request, "Tu carrito está vacío")
-        return redirect('cart:detail')
+    if not items_queryset.exists():
+        messages.warning(request, _("Tu carrito está vacío"))
+        return redirect("cart:detail")
+
+    items = list(items_queryset)
+
+    # Verificar stock antes de procesar la orden
+    for item in items:
+        if item.cantidad > item.producto.stock:
+            messages.error(
+                request,
+                _("No hay suficiente stock de %(product)s") % {"product": item.producto.nombre},
+            )
+            return redirect("cart:detail")
+
+    subtotal = sum(
+        (item.producto.precio * item.cantidad for item in items),
+        Decimal("0.00"),
+    )
+    shipping_cost = Decimal("5.00")
+    total_with_shipping = subtotal + shipping_cost
 
     if request.method == "POST":
-        # Verificar stock antes de crear la orden
-        for item in items:
-            if item.cantidad > item.producto.stock:
-                messages.error(request, f"No hay suficiente stock de {item.producto.nombre}")
-                return redirect('cart:detail')
+        form = CheckoutForm(request.POST)
+        if form.is_valid():
+            orden = Order.objects.create(usuario=request.user, estado="pendiente")
+            total = Decimal("0.00")
 
-        # Crear orden
-        orden = Order.objects.create(usuario=request.user, estado="pendiente")
-        total = Decimal('0.00')
+            for item in items:
+                OrderItem.objects.create(
+                    order=orden,
+                    producto=item.producto,
+                    cantidad=item.cantidad,
+                    precio_unitario=item.producto.precio,
+                )
+                item.producto.stock -= item.cantidad
+                item.producto.save()
+                total += item.producto.precio * item.cantidad
 
-        for item in items:
-            # Crear item de la orden
-            OrderItem.objects.create(
-                order=orden,
-                producto=item.producto,
-                cantidad=item.cantidad,
-                precio_unitario=item.producto.precio,
+            orden.total = total
+            orden.save()
+
+            cart.items.filter(pk__in=[item.pk for item in items]).delete()
+
+            messages.success(
+                request,
+                _("¡Orden #%(order_id)s creada exitosamente!") % {"order_id": orden.id},
             )
-            # Actualizar stock del producto
-            item.producto.stock -= item.cantidad
-            item.producto.save()
+            return redirect("orders:confirm", order_id=orden.id)
 
-            total += item.producto.precio * item.cantidad
+        messages.error(
+            request,
+            _("Por favor corrige los errores en el formulario de pago."),
+        )
+    else:
+        initial_data = {
+            "email": request.user.email,
+        }
+        full_name = request.user.get_full_name()
+        if full_name:
+            initial_data["nombre"] = full_name
+        elif getattr(request.user, "username", ""):
+            initial_data["nombre"] = request.user.username
+        form = CheckoutForm(initial=initial_data)
 
-        # Guardar total de la orden
-        orden.total = total
-        orden.save()
-
-        # Vaciar carrito (PERO PRIMERO guardamos los items en una variable)
-        items_list = list(items)  # Guardamos una copia antes de borrar
-        items.delete()  # Ahora sí borramos
-
-        messages.success(request, f"¡Orden #{orden.id} creada exitosamente!")
-        return redirect("orders:confirm", order_id=orden.id)
-
-    # Calcular total para el template
-    total = sum(Decimal(str(item.producto.precio)) * item.cantidad for item in items)
-    return render(request, "orders/checkout.html", {
-        "items": items,
-        "total": total,
-        "shipping_cost": Decimal('5.00'),
-        "total_with_shipping": total + Decimal('5.00')
-    })
+    return render(
+        request,
+        "orders/checkout.html",
+        {
+            "items": items,
+            "subtotal": subtotal,
+            "shipping_cost": shipping_cost,
+            "total_with_shipping": total_with_shipping,
+            "form": form,
+        },
+    )
 
 
 @login_required

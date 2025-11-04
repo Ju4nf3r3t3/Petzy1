@@ -1,7 +1,103 @@
 {% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Inicio" %} - Petzy{% endblock %}
+
 {% block content %}
-    <div class="text-center">
-        <h1>Bienvenido a Petzy 🐾</h1>
-        <p>Tu marketplace de confianza para todo lo que tu mascota necesita.</p>
-    </div>
+<div class="space-y-12">
+    <section class="text-center bg-white shadow rounded-xl p-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{% trans "Bienvenido a Petzy" %} 🐾</h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">{% trans "Tu marketplace de confianza para todo lo que tu mascota necesita." %}</p>
+    </section>
+
+    {% if weather_data %}
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-1 bg-blue-50 border border-blue-100 rounded-xl p-6">
+            <h2 class="text-xl font-semibold text-blue-900 mb-2">{% trans "Clima en Medellín" %}</h2>
+            <p class="text-gray-700">{% blocktrans with temp=weather_data.temperature wind=weather_data.windspeed %}Temperatura actual: {{ temp }}°C · Viento: {{ wind }} km/h{% endblocktrans %}</p>
+            <p class="text-sm text-blue-800 mt-2">{% trans "Datos proporcionados por Open-Meteo" %}</p>
+        </div>
+        <div class="md:col-span-2 bg-white shadow rounded-xl p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">{% trans "¿Por qué comprar con nosotros?" %}</h3>
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left text-gray-600">
+                <li class="flex items-start space-x-3">
+                    <span class="text-blue-500 text-xl">✔</span>
+                    <span>{% trans "Productos curados por expertos en bienestar animal." %}</span>
+                </li>
+                <li class="flex items-start space-x-3">
+                    <span class="text-blue-500 text-xl">✔</span>
+                    <span>{% trans "Pagos seguros y seguimiento en tiempo real de tus pedidos." %}</span>
+                </li>
+                <li class="flex items-start space-x-3">
+                    <span class="text-blue-500 text-xl">✔</span>
+                    <span>{% trans "Atención personalizada para resolver todas tus dudas." %}</span>
+                </li>
+                <li class="flex items-start space-x-3">
+                    <span class="text-blue-500 text-xl">✔</span>
+                    <span>{% trans "Entrega rápida en las principales ciudades del país." %}</span>
+                </li>
+            </ul>
+        </div>
+    </section>
+    {% endif %}
+
+    <section>
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-semibold text-gray-900">{% trans "Destacados para ti" %}</h2>
+            <a href="{% url 'products:list' %}" class="text-blue-600 hover:text-blue-800 font-medium">{% trans "Ver todo" %}</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for featured in featured_products %}
+            <article class="bg-white shadow rounded-lg overflow-hidden">
+                {% if featured.image_url %}
+                    <img src="{{ featured.image_url }}" alt="{{ featured.name }}" class="h-48 w-full object-cover">
+                {% endif %}
+                <div class="p-5">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ featured.name }}</h3>
+                    <p class="text-gray-600 text-sm mb-4">{{ featured.description }}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-blue-600 font-semibold text-lg">${{ featured.price }}</span>
+                        {% if featured.url and featured.url != '#' %}
+                        <a href="{{ featured.url }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">{% trans "Ver producto" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <p class="text-gray-600">{% trans "Estamos preparando recomendaciones personalizadas." %}</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section>
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-semibold text-gray-900">{% trans "Productos de aliados" %}</h2>
+            {% if ally_service_url %}
+            <a href="{{ ally_service_url }}" class="text-sm text-gray-500 hover:text-gray-700" target="_blank" rel="noopener">{% trans "Ver servicio" %}</a>
+            {% endif %}
+        </div>
+        {% if ally_products %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for ally in ally_products %}
+            <article class="bg-white shadow rounded-lg p-5 border border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ ally.name }}</h3>
+                <p class="text-gray-600 text-sm mb-3">{{ ally.description|default:_("Próximamente más información.") }}</p>
+                <div class="flex items-center justify-between">
+                    {% if ally.price %}
+                        <span class="text-blue-600 font-semibold">${{ ally.price }}</span>
+                    {% endif %}
+                    {% if ally.url %}
+                        <a href="{{ ally.url }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium" target="_blank" rel="noopener">{% trans "Visitar" %}</a>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-5">
+            <p>{% trans "Aún no se ha configurado el servicio de aliados o no hay información disponible." %}</p>
+        </div>
+        {% endif %}
+    </section>
+</div>
 {% endblock %}
