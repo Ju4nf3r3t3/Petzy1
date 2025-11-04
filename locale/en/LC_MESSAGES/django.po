@@ -317,3 +317,57 @@ msgstr "Confirm password"
 
 msgid "Temperatura actual: %(temp)s°C · Viento: %(wind)s km/h"
 msgstr "Current temperature: %(temp)s°C · Wind: %(wind)s km/h"
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+msgid "Envío"
+msgstr "Shipping"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Realizar pedido"
+msgstr "Place order"
+
+msgid "Tu carrito está vacío"
+msgstr "Your cart is empty"
+
+msgid "No hay suficiente stock de %(product)s"
+msgstr "Not enough stock for %(product)s"
+
+msgid "¡Orden #%(order_id)s creada exitosamente!"
+msgstr "Order #%(order_id)s created successfully!"
+
+msgid "Por favor corrige los errores en el formulario de pago."
+msgstr "Please fix the errors in the payment form."
+
+msgid "Nombre completo"
+msgstr "Full name"
+
+msgid "Teléfono"
+msgstr "Phone"
+
+msgid "Ciudad"
+msgstr "City"
+
+msgid "Dirección"
+msgstr "Address"
+
+msgid "Método de pago"
+msgstr "Payment method"
+
+msgid "Tarjeta de crédito/débito"
+msgstr "Credit/debit card"
+
+msgid "Número de tarjeta"
+msgstr "Card number"
+
+msgid "Fecha de expiración"
+msgstr "Expiration date"
+
+msgid "Este campo es obligatorio para pagos con tarjeta."
+msgstr "This field is required for card payments."
+
+msgid "CVV"
+msgstr "CVV"

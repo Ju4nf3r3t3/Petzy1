@@ -89,6 +89,18 @@
         </div>
     </header>
 
+    {% if messages %}
+    <div class="container mx-auto px-4 mt-4">
+        <div class="space-y-3">
+            {% for message in messages %}
+                <div class="border px-4 py-3 rounded-md {% if message.tags and 'success' in message.tags %}bg-green-100 border-green-400 text-green-800{% elif message.tags and 'warning' in message.tags %}bg-yellow-100 border-yellow-400 text-yellow-800{% elif message.tags and 'error' in message.tags %}bg-red-100 border-red-400 text-red-800{% else %}bg-blue-100 border-blue-400 text-blue-800{% endif %}">
+                    <p class="text-sm">{{ message }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
     <main class="container mx-auto px-4 py-8">
         {% block breadcrumbs %}
             {% if breadcrumbs %}
