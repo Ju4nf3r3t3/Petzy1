@@ -54,5 +54,13 @@ class CustomLoginView(LoginView):
         ]
         return context
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['breadcrumbs'] = [
+            {"label": _("Inicio"), "url": reverse_lazy("home:index")},
+            {"label": _("Iniciar sesión"), "url": ""},
+        ]
+        return context
+
 class CustomLogoutView(LogoutView):
     next_page = reverse_lazy("home:index")
