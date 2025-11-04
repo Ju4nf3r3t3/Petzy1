@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+
 import os
-from django.utils.translation import gettext_lazy as _
+
 from django.conf.urls.static import static
+from django.utils.translation import gettext_lazy as _
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -70,6 +73,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -149,3 +153,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "users:login"
 LOGIN_REDIRECT_URL = "home:index"
 LOGOUT_REDIRECT_URL = "home:index"
+
+ALLY_SERVICE_URL = os.environ.get(
+    "ALLY_SERVICE_URL",
+    "https://fakestoreapi.com/products?limit=5",
+)
+
+THIRD_PARTY_WEATHER_URL = os.environ.get(
+    "THIRD_PARTY_WEATHER_URL",
+    "https://api.open-meteo.com/v1/forecast?latitude=6.25&longitude=-75.56&current_weather=true&timezone=auto",
+)

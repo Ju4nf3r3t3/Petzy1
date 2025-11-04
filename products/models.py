@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from users.models import Usuario
 from django.db.models import Sum, Count, Avg
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -32,9 +33,17 @@ class Producto(models.Model):
         return round(avg, 1) if avg else 0
 
     @property
+    def promedio_rating_entero(self):
+        promedio = self.promedio_rating
+        return int(round(promedio)) if promedio else 0
+
+    @property
     def cantidad_resenas(self):
         """Cuenta la cantidad de reseñas del producto"""
         return self.reviews.count()
+
+    def get_absolute_url(self):
+        return reverse("products:detail", args=[self.pk])
 
     @classmethod
     def mas_vendidos(cls, limite=5):
