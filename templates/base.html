@@ -37,6 +37,7 @@
                 <div class="hidden md:block">
                     <form action="{% url 'set_language' %}" method="post" class="flex items-center space-x-2">
                         {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
                         {% get_current_language as LANGUAGE_CODE %}
                         {% get_available_languages as LANGUAGES %}
                         <label for="language" class="text-sm text-gray-600">{% trans "Idioma" %}</label>
@@ -75,6 +76,7 @@
                 <div class="pt-2">
                     <form action="{% url 'set_language' %}" method="post" class="flex items-center space-x-2">
                         {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
                         {% get_current_language as LANGUAGE_CODE %}
                         {% get_available_languages as LANGUAGES %}
                         <label for="language-mobile" class="text-sm text-gray-600">{% trans "Idioma" %}</label>

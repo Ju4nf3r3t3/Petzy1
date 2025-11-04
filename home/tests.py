@@ -1,7 +1,10 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+import tempfile
+from pathlib import Path
+
+from django.test import SimpleTestCase, TestCase
 
 from home.services import (
     DatabaseFeaturedProductsProvider,
@@ -9,6 +12,7 @@ from home.services import (
     StaticFeaturedProductsProvider,
     get_featured_provider,
 )
+from home.utils.i18n import ensure_compiled_catalogs
 from products.models import Producto
 
 
@@ -49,3 +53,30 @@ class FeaturedProductsProviderTests(TestCase):
         destacados = provider.get_featured()
         self.assertGreaterEqual(len(destacados), 1)
         self.assertTrue(any(item.name == "Cama ortopédica" for item in destacados))
+
+
+class TranslationCompilationTests(SimpleTestCase):
+    def test_compiles_missing_catalog_on_demand(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            locale_root = Path(tmp)
+            po_dir = locale_root / "en" / "LC_MESSAGES"
+            po_dir.mkdir(parents=True)
+
+            po_dir.joinpath("django.po").write_text(
+                'msgid ""\n'
+                'msgstr ""\n'
+                '"Content-Type: text/plain; charset=UTF-8\\n"\n\n'
+                'msgid "Hola"\n'
+                'msgstr "Hello"\n',
+                encoding="utf-8",
+            )
+
+            ensure_compiled_catalogs(
+                force=True,
+                locale_dirs=[locale_root],
+                languages=["en"],
+            )
+
+            compiled = po_dir / "django.mo"
+            self.assertTrue(compiled.exists())
+            self.assertGreater(compiled.stat().st_size, 0)

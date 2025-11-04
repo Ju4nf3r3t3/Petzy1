@@ -1,2 +1,6 @@
 # Ignore compiled translation catalogs
 *.mo
+
+# Ignore Python bytecode caches
+__pycache__/
+*.py[cod]

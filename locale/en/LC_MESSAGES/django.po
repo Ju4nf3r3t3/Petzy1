@@ -18,6 +18,12 @@ msgstr "Home"
 msgid "Productos"
 msgstr "Products"
 
+msgid "Español"
+msgstr "Spanish"
+
+msgid "English"
+msgstr "English"
+
 msgid "Usuarios"
 msgstr "Users"
 
