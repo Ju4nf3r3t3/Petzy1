@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}{{ producto.nombre }} - Petzy{% endblock %}
 
@@ -11,7 +12,7 @@
             <img src="{{ producto.imagen.url }}" class="w-full rounded-lg shadow-md" alt="{{ producto.nombre }}">
             {% else %}
             <div class="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                <span class="text-gray-400">Sin imagen</span>
+                <span class="text-gray-400">{% trans "Sin imagen" %}</span>
             </div>
             {% endif %}
         </div>
@@ -22,13 +23,13 @@
             <p class="text-gray-500 mb-4">{{ producto.categoria }}</p>
 
             <div class="flex items-center mb-4">
-                <p class="text-2xl font-bold text-green-600">${{ producto.precio }}</p>
+                <p class="text-2xl font-bold text-green-600">{{ producto.precio|currency_cop }}</p>
 
                 {% if producto.promedio_rating > 0 %}
                 <div class="ml-4 flex items-center">
                     <div class="text-yellow-400 flex">
                         {% for i in "12345" %}
-                            {% if forloop.counter <= producto.promedio_rating %}
+                            {% if forloop.counter <= producto.promedio_rating_entero %}
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                 </svg>
@@ -39,7 +40,7 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <span class="ml-2 text-gray-600">({{ producto.promedio_rating }}) - {{ producto.cantidad_resenas }} reseñas</span>
+                    <span class="ml-2 text-gray-600">({{ producto.promedio_rating }}) - {{ producto.cantidad_resenas }} {% trans "reseñas" %}</span>
                 </div>
                 {% endif %}
             </div>
@@ -48,16 +49,16 @@
 
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
-                    <p class="text-sm text-gray-500">Stock</p>
+                    <p class="text-sm text-gray-500">{% trans "Stock" %}</p>
                     <p class="font-medium">{{ producto.stock }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500">Vendedor</p>
+                    <p class="text-sm text-gray-500">{% trans "Vendedor" %}</p>
                     <p class="font-medium">{{ producto.vendedor.username }}</p>
                 </div>
                 {% if producto.total_vendidos > 0 %}
                 <div>
-                    <p class="text-sm text-gray-500">Vendidos</p>
+                    <p class="text-sm text-gray-500">{% trans "Vendidos" %}</p>
                     <p class="font-medium">{{ producto.total_vendidos }}</p>
                 </div>
                 {% endif %}
@@ -67,14 +68,14 @@
             <form method="post" action="{% url 'cart:add' producto.id %}" class="mb-6">
                 {% csrf_token %}
                 <div class="flex items-center">
-                    <label for="cantidad" class="mr-3 text-gray-700">Cantidad:</label>
+                    <label for="cantidad" class="mr-3 text-gray-700">{% trans "Cantidad" %}:</label>
                     <input type="number" class="w-20 px-3 py-2 border border-gray-300 rounded-md text-center"
                            id="cantidad" name="cantidad" value="1" min="1" max="{{ producto.stock }}">
                     <button type="submit" class="ml-4 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-md transition duration-200 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        Añadir al carrito
+                        {% trans "Añadir al carrito" %}
                     </button>
                 </div>
             </form>
@@ -84,7 +85,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                     </svg>
-                    Producto agotado
+                    {% trans "Producto agotado" %}
                 </div>
             </div>
             {% endif %}
@@ -94,14 +95,14 @@
     <!-- Reseñas -->
     <div class="mt-12">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 sm:mb-0">Reseñas</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 sm:mb-0">{% trans "Reseñas" %}</h2>
             {% if user.is_authenticated and user != producto.vendedor %}
             <a href="{% url 'products:crear_review' producto.id %}"
                class="bg-white border border-blue-500 text-blue-500 hover:bg-blue-50 font-medium py-2 px-4 rounded-md transition duration-200 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Escribir reseña
+                {% trans "Escribir reseña" %}
             </a>
             {% endif %}
         </div>
@@ -112,7 +113,7 @@
                 <h4 class="font-medium text-gray-800">{{ r.usuario.username }}</h4>
                 <div class="text-yellow-400 flex">
                     {% for i in "12345" %}
-                        {% if forloop.counter <= r.estrellas %}
+                        {% if forloop.counter <= r.rating %}
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
@@ -125,7 +126,7 @@
         </div>
         {% empty %}
         <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-6 rounded-md text-center">
-            <p>No hay reseñas aún. ¡Sé el primero en opinar!</p>
+            <p>{% trans "No hay reseñas aún. ¡Sé el primero en opinar!" %}</p>
         </div>
         {% endfor %}
     </div>
@@ -135,7 +136,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Volver a productos
+            {% trans "Volver a productos" %}
         </a>
     </div>
 </div>

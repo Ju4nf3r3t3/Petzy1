@@ -15,7 +15,7 @@
 
         <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left">
             <h3 class="font-semibold text-gray-800 mb-2">Resumen del pedido:</h3>
-            <p><strong>Total:</strong> ${{ order.total|floatformat:2 }}</p>
+            <p><strong>Total:</strong> {{ order.total|currency_cop }}</p>
             <p><strong>Estado:</strong> <span class="text-green-600">{{ order.get_estado_display }}</span></p>
             <p><strong>Fecha:</strong> {{ order.fecha|date:"d M Y H:i" }}</p>
         </div>
