@@ -19,7 +19,7 @@ def order_list(request):
 @login_required
 @ensure_csrf_cookie
 def checkout(request):
-    cart, _ = Cart.objects.get_or_create(usuario=request.user)
+    cart, created = Cart.objects.get_or_create(usuario=request.user)
     items_queryset = cart.items.select_related("producto")
 
     if not items_queryset.exists():
