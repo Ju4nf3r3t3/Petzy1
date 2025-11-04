@@ -1,0 +1,319 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Petzy\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-01 00:00+0000\n"
+"PO-Revision-Date: 2024-06-01 00:00+0000\n"
+"Last-Translator: AI Assistant <noreply@example.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Inicio"
+msgstr "Home"
+
+msgid "Productos"
+msgstr "Products"
+
+msgid "Usuarios"
+msgstr "Users"
+
+msgid "Usuarios registrados"
+msgstr "Registered users"
+
+msgid "Carrito"
+msgstr "Cart"
+
+msgid "Pedidos"
+msgstr "Orders"
+
+msgid "Cerrar sesión"
+msgstr "Log out"
+
+msgid "Iniciar sesión"
+msgstr "Sign in"
+
+msgid "Registro"
+msgstr "Sign up"
+
+msgid "Idioma"
+msgstr "Language"
+
+msgid "Ruta de navegación"
+msgstr "Breadcrumb navigation"
+
+msgid "Tu marketplace de confianza para mascotas"
+msgstr "Your trusted marketplace for pets"
+
+msgid "Enlaces rápidos"
+msgstr "Quick links"
+
+msgid "Contacto"
+msgstr "Contact"
+
+msgid "Todos los derechos reservados."
+msgstr "All rights reserved."
+
+msgid "Bienvenido a Petzy"
+msgstr "Welcome to Petzy"
+
+msgid "Tu marketplace de confianza para todo lo que tu mascota necesita."
+msgstr "Your trusted marketplace for everything your pet needs."
+
+msgid "Clima en Medellín"
+msgstr "Weather in Medellín"
+
+msgid "Datos proporcionados por Open-Meteo"
+msgstr "Data provided by Open-Meteo"
+
+msgid "¿Por qué comprar con nosotros?"
+msgstr "Why shop with us?"
+
+msgid "Productos curados por expertos en bienestar animal."
+msgstr "Products curated by animal wellness experts."
+
+msgid "Pagos seguros y seguimiento en tiempo real de tus pedidos."
+msgstr "Secure payments and real-time order tracking."
+
+msgid "Atención personalizada para resolver todas tus dudas."
+msgstr "Personalized support to answer all your questions."
+
+msgid "Entrega rápida en las principales ciudades del país."
+msgstr "Fast delivery in the country's main cities."
+
+msgid "Destacados para ti"
+msgstr "Featured for you"
+
+msgid "Ver todo"
+msgstr "View all"
+
+msgid "Ver producto"
+msgstr "View product"
+
+msgid "Estamos preparando recomendaciones personalizadas."
+msgstr "We are preparing personalized recommendations."
+
+msgid "Productos de aliados"
+msgstr "Partner products"
+
+msgid "Ver servicio"
+msgstr "View service"
+
+msgid "Próximamente más información."
+msgstr "More information coming soon."
+
+msgid "Aún no se ha configurado el servicio de aliados o no hay información disponible."
+msgstr "The allied service has not been configured yet or no information is available."
+
+msgid "¡Producto creado exitosamente!"
+msgstr "Product created successfully!"
+
+msgid "¡Reseña agregada exitosamente!"
+msgstr "Review added successfully!"
+
+msgid "Ya has reseñado este producto."
+msgstr "You have already reviewed this product."
+
+msgid "Productos Más Vendidos"
+msgstr "Top selling products"
+
+msgid "Productos Más Comentados"
+msgstr "Most commented products"
+
+msgid "Productos Mejor Calificados"
+msgstr "Best rated products"
+
+msgid "Crear reseña"
+msgstr "Create review"
+
+msgid "Crear producto"
+msgstr "Create product"
+
+msgid "Buscar productos..."
+msgstr "Search products..."
+
+msgid "Buscar"
+msgstr "Search"
+
+msgid "Todas las categorías"
+msgstr "All categories"
+
+msgid "Productos disponibles"
+msgstr "Available products"
+
+msgid "Más Vendidos"
+msgstr "Top selling"
+
+msgid "Más Comentados"
+msgstr "Most commented"
+
+msgid "Mejor Calificados"
+msgstr "Best rated"
+
+msgid "Sin imagen"
+msgstr "No image"
+
+msgid "Ver Detalles"
+msgstr "View details"
+
+msgid "No hay productos disponibles"
+msgstr "No products available"
+
+msgid "Intenta con otros filtros de búsqueda."
+msgstr "Try different search filters."
+
+msgid "Anterior"
+msgstr "Previous"
+
+msgid "Siguiente"
+msgstr "Next"
+
+msgid "reseñas"
+msgstr "reviews"
+
+msgid "Stock"
+msgstr "Stock"
+
+msgid "Vendedor"
+msgstr "Seller"
+
+msgid "Vendidos"
+msgstr "Sold"
+
+msgid "Cantidad"
+msgstr "Quantity"
+
+msgid "Añadir al carrito"
+msgstr "Add to cart"
+
+msgid "Producto agotado"
+msgstr "Out of stock"
+
+msgid "Reseñas"
+msgstr "Reviews"
+
+msgid "Escribir reseña"
+msgstr "Write review"
+
+msgid "No especificado"
+msgstr "Not provided"
+
+msgid "Sí,No"
+msgstr "Yes,No"
+
+msgid "Activo,Inactivo"
+msgstr "Active,Inactive"
+
+msgid "No hay reseñas aún. ¡Sé el primero en opinar!"
+msgstr "There are no reviews yet. Be the first to comment!"
+
+msgid "Volver a productos"
+msgstr "Back to products"
+
+msgid "Reseñas:"
+msgstr "Reviews:"
+
+msgid "Calificación"
+msgstr "Rating"
+
+msgid "No hay datos disponibles"
+msgstr "No data available"
+
+msgid "No se encontraron productos para esta categoría."
+msgstr "No products were found for this category."
+
+msgid "Volver a todos los productos"
+msgstr "Back to all products"
+
+msgid "Crear nuevo producto"
+msgstr "Create new product"
+
+msgid "Guardar"
+msgstr "Save"
+
+msgid "Volver a la lista"
+msgstr "Back to list"
+
+msgid "Estilos básicos para los campos del formulario Django"
+msgstr "Basic styles for Django form fields"
+
+msgid "Crear Reseña"
+msgstr "Create Review"
+
+msgid "Crear reseña para %(nombre)s"
+msgstr "Create review for %(nombre)s"
+
+msgid "Escribe tu experiencia con este producto..."
+msgstr "Share your experience with this product..."
+
+msgid "Enviar Reseña"
+msgstr "Submit review"
+
+msgid "Cancelar"
+msgstr "Cancel"
+
+msgid "Registrarse"
+msgstr "Sign up"
+
+msgid "Crear cuenta"
+msgstr "Create account"
+
+msgid "Únete a la comunidad Petzy"
+msgstr "Join the Petzy community"
+
+msgid "¿Ya tienes cuenta?"
+msgstr "Already have an account?"
+
+msgid "Inicia sesión aquí"
+msgstr "Sign in here"
+
+msgid "Accede a tu cuenta de Petzy"
+msgstr "Access your Petzy account"
+
+msgid "Usuario o contraseña incorrectos. Por favor intenta de nuevo."
+msgstr "Incorrect username or password. Please try again."
+
+msgid "Usuario"
+msgstr "Username"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Staff"
+msgstr "Staff"
+
+msgid "Estado"
+msgstr "Status"
+
+msgid "Tu nombre de usuario"
+msgstr "Your username"
+
+msgid "Contraseña"
+msgstr "Password"
+
+msgid "Tu contraseña"
+msgstr "Your password"
+
+msgid "Entrar"
+msgstr "Sign in"
+
+msgid "¿No tienes cuenta?"
+msgstr "Don't have an account?"
+
+msgid "Regístrate aquí"
+msgstr "Register here"
+
+msgid "Nombre de usuario"
+msgstr "Username"
+
+msgid "Correo electrónico"
+msgstr "Email"
+
+msgid "Confirmar contraseña"
+msgstr "Confirm password"
+
+msgid "Temperatura actual: %(temp)s°C · Viento: %(wind)s km/h"
+msgstr "Current temperature: %(temp)s°C · Wind: %(wind)s km/h"

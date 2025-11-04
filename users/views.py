@@ -1,12 +1,12 @@
 # users/views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.urls import reverse_lazy
-from django.views.generic import ListView
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.utils.translation import gettext as _
+from django.views.generic import ListView
 
-from .forms import CustomUserCreationForm   # 👈 usamos el form custom
+from .forms import CustomAuthenticationForm, CustomUserCreationForm
 
 User = get_user_model()
 
@@ -15,6 +15,14 @@ class UsuarioListView(ListView):
     template_name = "users/users_list.html"
     context_object_name = "usuarios"
     paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['breadcrumbs'] = [
+            {"label": _("Inicio"), "url": reverse_lazy("home:index")},
+            {"label": _("Usuarios"), "url": ""},
+        ]
+        return context
 
 def register_view(request):
     if request.method == "POST":
@@ -25,10 +33,26 @@ def register_view(request):
             return redirect("home:index")  # ajusta según tu app home
     else:
         form = CustomUserCreationForm()
-    return render(request, "users/register.html", {"form": form})
+    context = {
+        "form": form,
+        "breadcrumbs": [
+            {"label": _("Inicio"), "url": reverse_lazy("home:index")},
+            {"label": _("Registro"), "url": ""},
+        ],
+    }
+    return render(request, "users/register.html", context)
 
 class CustomLoginView(LoginView):
-    template_name = 'users/login.html'
+    template_name = "users/login.html"
+    authentication_form = CustomAuthenticationForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['breadcrumbs'] = [
+            {"label": _("Inicio"), "url": reverse_lazy("home:index")},
+            {"label": _("Iniciar sesión"), "url": ""},
+        ]
+        return context
 
 class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy('home')
+    next_page = reverse_lazy("home:index")

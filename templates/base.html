@@ -1,10 +1,10 @@
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ request.LANGUAGE_CODE|default:'es' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Petzy{% endblock %}</title>
-    {% load static %}
     <!-- Incluye Tailwind CSS desde CDN (para desarrollo) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- O instala Tailwind CSS localmente para producción -->
@@ -19,21 +19,34 @@
                     </a>
                 </h1>
                 <nav class="hidden md:flex space-x-6">
-                    <a href="{% url 'home:index' %}" class="text-gray-700 hover:text-blue-600">Inicio</a>
-                    <a href="{% url 'products:list' %}" class="text-gray-700 hover:text-blue-600">Productos</a>
-                    <a href="{% url 'cart:detail' %}" class="text-gray-700 hover:text-blue-600">Carrito</a>
-                    <a href="{% url 'orders:list' %}" class="text-gray-700 hover:text-blue-600">Pedidos</a>
+                    <a href="{% url 'home:index' %}" class="text-gray-700 hover:text-blue-600">{% trans "Inicio" %}</a>
+                    <a href="{% url 'products:list' %}" class="text-gray-700 hover:text-blue-600">{% trans "Productos" %}</a>
+                    <a href="{% url 'cart:detail' %}" class="text-gray-700 hover:text-blue-600">{% trans "Carrito" %}</a>
+                    <a href="{% url 'orders:list' %}" class="text-gray-700 hover:text-blue-600">{% trans "Pedidos" %}</a>
                     {% if user.is_authenticated %}
-                        <span class="text-gray-700">Hola {{ user.username }}</span>
+                        <span class="text-gray-700">{% blocktrans %}Hola {{ user.username }}{% endblocktrans %}</span>
                         <form action="{% url 'logout' %}" method="post" class="inline">
                             {% csrf_token %}
-                            <button type="submit" class="text-gray-700 hover:text-blue-600">Cerrar sesión</button>
+                            <button type="submit" class="text-gray-700 hover:text-blue-600">{% trans "Cerrar sesión" %}</button>
                         </form>
                     {% else %}
-                        <a href="{% url 'users:login' %}" class="text-gray-700 hover:text-blue-600">Login</a>
-                        <a href="{% url 'users:register' %}" class="text-gray-700 hover:text-blue-600">Registro</a>
+                        <a href="{% url 'users:login' %}" class="text-gray-700 hover:text-blue-600">{% trans "Iniciar sesión" %}</a>
+                        <a href="{% url 'users:register' %}" class="text-gray-700 hover:text-blue-600">{% trans "Registro" %}</a>
                     {% endif %}
                 </nav>
+                <div class="hidden md:block">
+                    <form action="{% url 'set_language' %}" method="post" class="flex items-center space-x-2">
+                        {% csrf_token %}
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        <label for="language" class="text-sm text-gray-600">{% trans "Idioma" %}</label>
+                        <select name="language" id="language" class="border border-gray-300 rounded-md text-sm px-2 py-1" onchange="this.form.submit();">
+                            {% for code, name in LANGUAGES %}
+                                <option value="{{ code }}" {% if code == LANGUAGE_CODE %}selected{% endif %}>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
                 <!-- Menú móvil -->
                 <div class="md:hidden">
                     <button id="mobile-menu-button" class="text-gray-700">
@@ -45,25 +58,58 @@
             </div>
             <!-- Menú móvil desplegable -->
             <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 pb-4">
-                <a href="{% url 'home:index' %}" class="block py-2 text-gray-700 hover:text-blue-600">Inicio</a>
-                <a href="{% url 'products:list' %}" class="block py-2 text-gray-700 hover:text-blue-600">Productos</a>
-                <a href="{% url 'cart:detail' %}" class="block py-2 text-gray-700 hover:text-blue-600">Carrito</a>
-                <a href="{% url 'orders:list' %}" class="block py-2 text-gray-700 hover:text-blue-600">Pedidos</a>
+                <a href="{% url 'home:index' %}" class="block py-2 text-gray-700 hover:text-blue-600">{% trans "Inicio" %}</a>
+                <a href="{% url 'products:list' %}" class="block py-2 text-gray-700 hover:text-blue-600">{% trans "Productos" %}</a>
+                <a href="{% url 'cart:detail' %}" class="block py-2 text-gray-700 hover:text-blue-600">{% trans "Carrito" %}</a>
+                <a href="{% url 'orders:list' %}" class="block py-2 text-gray-700 hover:text-blue-600">{% trans "Pedidos" %}</a>
                 {% if user.is_authenticated %}
-                    <span class="block py-2 text-gray-700">Hola {{ user.username }}</span>
+                    <span class="block py-2 text-gray-700">{% blocktrans %}Hola {{ user.username }}{% endblocktrans %}</span>
                     <form action="{% url 'logout' %}" method="post" class="inline">
                         {% csrf_token %}
-                        <button type="submit" class="block py-2 text-gray-700 hover:text-blue-600">Cerrar sesión</button>
+                        <button type="submit" class="block py-2 text-gray-700 hover:text-blue-600">{% trans "Cerrar sesión" %}</button>
                     </form>
                 {% else %}
-                    <a href="{% url 'users:login' %}" class="block py-2 text-gray-700 hover:text-blue-600">Login</a>
-                    <a href="{% url 'users:register' %}" class="block py-2 text-gray-700 hover:text-blue-600">Registro</a>
+                    <a href="{% url 'users:login' %}" class="block py-2 text-gray-700 hover:text-blue-600">{% trans "Iniciar sesión" %}</a>
+                    <a href="{% url 'users:register' %}" class="block py-2 text-gray-700 hover:text-blue-600">{% trans "Registro" %}</a>
                 {% endif %}
+                <div class="pt-2">
+                    <form action="{% url 'set_language' %}" method="post" class="flex items-center space-x-2">
+                        {% csrf_token %}
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        <label for="language-mobile" class="text-sm text-gray-600">{% trans "Idioma" %}</label>
+                        <select name="language" id="language-mobile" class="border border-gray-300 rounded-md text-sm px-2 py-1" onchange="this.form.submit();">
+                            {% for code, name in LANGUAGES %}
+                                <option value="{{ code }}" {% if code == LANGUAGE_CODE %}selected{% endif %}>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-8">
+        {% block breadcrumbs %}
+            {% if breadcrumbs %}
+                <nav class="text-sm text-gray-500 mb-6" aria-label="{% trans "Ruta de navegación" %}">
+                    <ol class="flex flex-wrap items-center gap-2">
+                        {% for crumb in breadcrumbs %}
+                            <li class="flex items-center">
+                                {% if crumb.url %}
+                                    <a href="{{ crumb.url }}" class="hover:text-blue-600">{{ crumb.label }}</a>
+                                {% else %}
+                                    <span class="text-gray-700">{{ crumb.label }}</span>
+                                {% endif %}
+                                {% if not forloop.last %}
+                                    <span class="mx-2">/</span>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </nav>
+            {% endif %}
+        {% endblock %}
         {% block content %}{% endblock %}
     </main>
 
@@ -72,19 +118,19 @@
             <div class="flex flex-col md:flex-row justify-between">
                 <div class="mb-6 md:mb-0">
                     <h2 class="text-xl font-bold mb-4">Petzy</h2>
-                    <p>Tu marketplace de confianza para mascotas</p>
+                    <p>{% trans "Tu marketplace de confianza para mascotas" %}</p>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Enlaces rápidos</h3>
+                    <h3 class="text-lg font-semibold mb-4">{% trans "Enlaces rápidos" %}</h3>
                     <ul class="space-y-2">
-                        <li><a href="{% url 'home:index' %}" class="hover:text-blue-300">Inicio</a></li>
-                        <li><a href="{% url 'products:list' %}" class="hover:text-blue-300">Productos</a></li>
-                        <li><a href="#" class="hover:text-blue-300">Contacto</a></li>
+                        <li><a href="{% url 'home:index' %}" class="hover:text-blue-300">{% trans "Inicio" %}</a></li>
+                        <li><a href="{% url 'products:list' %}" class="hover:text-blue-300">{% trans "Productos" %}</a></li>
+                        <li><a href="#" class="hover:text-blue-300">{% trans "Contacto" %}</a></li>
                     </ul>
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center">
-                <p>&copy; 2023 Petzy. Todos los derechos reservados.</p>
+                <p>&copy; 2023 Petzy. {% trans "Todos los derechos reservados." %}</p>
             </div>
         </div>
     </footer>
