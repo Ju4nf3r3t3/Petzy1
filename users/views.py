@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import ListView
 
-from .forms import CustomUserCreationForm   # 👈 usamos el form custom
+from .forms import CustomAuthenticationForm, CustomUserCreationForm
 
 User = get_user_model()
 
@@ -43,7 +43,16 @@ def register_view(request):
     return render(request, "users/register.html", context)
 
 class CustomLoginView(LoginView):
-    template_name = 'users/login.html'
+    template_name = "users/login.html"
+    authentication_form = CustomAuthenticationForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['breadcrumbs'] = [
+            {"label": _("Inicio"), "url": reverse_lazy("home:index")},
+            {"label": _("Iniciar sesión"), "url": ""},
+        ]
+        return context
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -54,4 +63,4 @@ class CustomLoginView(LoginView):
         return context
 
 class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy('home')
+    next_page = reverse_lazy("home:index")
