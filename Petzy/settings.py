@@ -27,9 +27,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^(k$smi#t=gxum#og5cvkcf+qk4nb7k5if-zeyq(z*$85bnqm*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = False
+ALLOWED_HOSTS = [
+    ".run.app",                    # comodín para cualquier subdominio de Cloud Run
+    "petzy-kql44ayepq-uc.a.run.app",  # host exacto de tu servicio actual
+    "localhost", "127.0.0.1"
+]
+CSRF_TRUSTED_ORIGINS = ["https://*.run.app",
+                        "https://petzy-kql44ayepq-uc.a.run.app"]
 
 
 # Application definition
@@ -48,7 +53,6 @@ INSTALLED_APPS = [
     'services',
     'home',
 ]
-
 
 
 MIDDLEWARE = [
